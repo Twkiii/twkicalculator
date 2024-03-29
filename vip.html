@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        @font-face {
+            font-family: pixel;
+            src: url(img/DePixelHalbfett.otf);
+        }
+        @font-face {
+            font-family: pixel2;
+            src: url(img/DePixelKlein.otf);
+        }
+        body {
+            color: #ffffff;
+            background-color: blue;
+            overflow: hidden;
+            position: relative;
+            background-image: url(img/xdd.png);
+            background-repeat: no-repeat;
+            background-position: center top 350px;
+            background-size: cover;
+            z-index: 0;
+        }
+        .form-control {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #555555;
+        }
+
+        
+        .btn-secondary {
+            background-color: #622aff;
+            border-color: #dc3545;
+            color: #fff;
+            font-family: pixel;
+        }
+        .form-label, .mb-3 {
+            font-family: pixel2;
+        }
+        ::placeholder {
+            font-family: pixel2;
+            font-size: 14px;
+            color: #999;
+        }
+        .btn-primary {
+            background-color: #e3ff37;
+            border-color: #dc3545;
+            color: #000;
+            font-family: pixel;
+        }
+
+        .btn-primary:hover {
+            background-color: #e3ff37;
+            border-color: #bd2130;
+            font-weight: inherit;
+            color: #000;
+            text-transform: inherit;
+            font-family: pixel;
+            transform: scale(1.1);
+        }
+
+        .btn-secondary:hover {
+            background-color: #622aff;
+            text-transform: inherit;
+            font-family: pixel;
+            font-weight: inherit;
+            transform: scale(1.1);
+        }
+
+        .card {
+            background-color: #e6e6e6;
+            border: 1px solid #555555;
+            color: #202020;
+        }
+
+        .card-header {
+            background-color: #252525;
+            border-color: #777777;
+            color: #ffffff;
+            font-family: pixel;
+        }
+        .text{
+            font-family: pixel2;
+            color: #777777;
+            font-size: 14px;
+            float: right;
+        }
+
+        .container {
+            max-width: 1000px;
+        }
+
+        .clouds {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .cloud {
+            position: absolute;
+            top: 10px;
+            animation: moveClouds linear infinite;
+        }
+
+        @keyframes moveClouds {
+            from {
+                left: -200px;
+                
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        .cloud1 {
+            left: 100px;
+            animation-duration: 60s;
+            
+        }
+
+        .cloud2 {
+            left: -10px;
+            top: 200px; 
+            animation-duration: 80s;
+        }
+
+        .cloud3 {
+            left: -100px;
+            top: 350px; 
+            animation-duration: 100s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clouds">
+        <img src="img/cloud1.png" alt="Cloud" class="cloud cloud1">
+        <img src="img/cloud2.png" alt="Cloud" class="cloud cloud2">
+        <img src="img/cloud3.png" alt="Cloud" class="cloud cloud3">
+    </div>
+    <br><br><br>
+    <div class="container mt-4 center-content">
+        <div class="card">
+            <center><h5 class="card-header">VIP Calculator (1% tax)</h5></center>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="energyInput" class="form-label">Enter your energy:</label>
+                            <input type="number" class="form-control" id="energyInput" placeholder="Enter energy">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cropInput" class="form-label">Number of crops you're planning to plant:</label>
+                            <input type="number" class="form-control" id="cropInput" placeholder="Enter number of crops">
+                        </div>
+                        <div class="mb-3">
+                            <label for="energyPerPlantInput" class="form-label">Energy per plant:</label>
+                            <input type="number" class="form-control" id="energyPerPlantInput"
+                                placeholder="Enter energy per plant">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sellPriceInput" class="form-label">Selling price per crop/item:</label>
+                            <input type="number" class="form-control" id="sellPriceInput" placeholder="Enter sell price">
+                        </div>
+                        <div class="mb-3">
+                            <label for="wineMoneyInput" class="form-label">Available money before buying energy and resources:</label>
+                            <input type="number" class="form-control" id="wineMoneyInput" placeholder="Enter money before buying wine">
+                        </div>
+                        <div class="mb-3">
+                            <label for="moneyAfterResourcesInput" class="form-label">Available money after buying resources:</label>
+                            <input type="number" class="form-control" id="moneyAfterResourcesInput" placeholder="Enter money after buying resources">
+                        </div>
+                        <button id="calculateButton" class="btn btn-primary">Calculate</button>
+                        <button id="resetButton" class="btn btn-primary">Reset</button>
+                        <button id="backButton" class="btn btn-secondary">Back</button> 
+                    </div>
+                    <div class="col-md-6">
+                        <div id="results" class="mt-4"></div>
+                    </div>  
+                        <div class="container">
+                            <span class="text">&copy; TWKI.</span>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <script>
+        document.getElementById("calculateButton").addEventListener("click", function () {
+            var energy = parseFloat(document.getElementById("energyInput").value);
+            var crops = parseInt(document.getElementById("cropInput").value);
+            var energyPerPlant = parseFloat(document.getElementById("energyPerPlantInput").value);
+            var sellPrice = parseFloat(document.getElementById("sellPriceInput").value);
+            var wineMoney = parseFloat(document.getElementById("wineMoneyInput").value);
+            var moneyAfterResources = parseFloat(document.getElementById("moneyAfterResourcesInput").value);
+
+            var totalEnergyUsing = crops * energyPerPlant;
+            var remainingEnergy = energy - totalEnergyUsing;
+            var totalProfitWithoutTax = crops * sellPrice;
+            var totalProfitWithTax = totalProfitWithoutTax * 0.99;
+            var taxDeduction = totalProfitWithoutTax - totalProfitWithTax;
+            var totalDeductedForResources = wineMoney - moneyAfterResources;
+            var totalMoney = totalProfitWithTax + moneyAfterResources;
+            var totalProfit = wineMoney - totalMoney;
+
+            var resultsHTML = `
+                <div class="mb-3">Total energy used: ${totalEnergyUsing}</div>
+                <div class="mb-3">Energy remaining: ${remainingEnergy}</div>
+                <div class="mb-3">Total profit without tax: ${totalProfitWithoutTax}</div>
+                <div class="mb-3">Total profit with 1% tax deduction: ${totalProfitWithTax}</div>
+                <div class="mb-3">Tax deduction (1%): ${taxDeduction}</div>
+                <div class="mb-3">Total deducted for resources: ${totalDeductedForResources}</div>
+                <div class="mb-3">Total funds available: ${totalMoney}</div>
+                <div class="mb-3">TOTAL PROFIT: ${totalProfit}!!</div>
+            `;
+
+            document.getElementById("results").innerHTML = resultsHTML;
+        });
+        document.getElementById("resetButton").addEventListener("click", function () {
+        document.getElementById("energyInput").value = "";
+        document.getElementById("cropInput").value = "";
+        document.getElementById("energyPerPlantInput").value = "";
+        document.getElementById("sellPriceInput").value = "";
+        document.getElementById("wineMoneyInput").value = "";
+        document.getElementById("moneyAfterResourcesInput").value = "";
+
+        document.getElementById("results").innerHTML = "";
+    });
+
+        document.getElementById("backButton").addEventListener("click", function() {
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
