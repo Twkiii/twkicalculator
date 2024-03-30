@@ -215,7 +215,7 @@
             var taxDeduction = totalProfitWithoutTax - totalProfitWithTax;
             var totalDeductedForResources = wineMoney - moneyAfterResources;
             var totalMoney = totalProfitWithTax + moneyAfterResources;
-            var totalProfit = wineMoney - totalMoney;
+            var totalProfit = totalMoney - wineMoney;
 
             var resultsHTML = `
                 <div class="mb-3">Total energy used: ${totalEnergyUsing}</div>
