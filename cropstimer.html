@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Timer</title>
+  <link rel="icon" type="image/x-icon" href="img/pixel-icon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+            @font-face {
+            font-family: pixel;
+            src: url(img/DePixelHalbfett.otf);
+        }
+        @font-face {
+            font-family: pixel2;
+            src: url(img/DePixelKlein.otf);
+        }
+        h1, th {
+            color: black;
+            font-family: pixel;
+        }
+        p {
+            color: gray;
+            font-family: pixel2;
+            font-size: 10px;
+        }
+        .btn-primary {
+            border-image-source: url(https://d31ss916pli4td.cloudfront.net/game/ui/kit/buttonyellow.png);
+            background-color: #e3ff37;
+            text-shadow: 0 2px 0 #ffa901;
+            border-color: transparent;
+            color: #000;
+            font-family: pixel;
+            padding: 15px 30px;
+        }
+        body {
+            color: #ffffff;
+            background-color: blue;
+            overflow: hidden;
+            position: relative;
+            background-image: url(img/xdd.png);
+            background-repeat: no-repeat;
+            background-position: center top 50px;
+            background-size: cover;
+            z-index: 0;
+        }
+        .mb-3 {
+            color: #000;
+            font-family: pixel2;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.856);
+            padding: 100px;
+            border-radius: 25px;
+        }
+        #timer-table {
+            margin-top: 20px;
+        }
+        /* Apply font-family and color to table cells */
+        #timer-table td {
+            font-family: pixel2; /* Use the same font-family as <p> elements */
+            color: rgb(0, 0, 0); /* Match the color of <p> elements */
+        }
+  </style>
+</head>
+<body>
+    
+
+<div class="container text-center">
+  <div>
+    
+    <h1 class="mt-5">TEST TIMER MADERPAKER</h1>
+    
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <form id="item-form">
+          <div class="mb-3">
+            <label for="item-name" class="form-label">Item Name</label>
+            <input type="text" class="form-control" id="item-name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Timer Duration</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="timer-hours" placeholder="Hours">
+              <input type="number" class="form-control" id="timer-minutes" placeholder="Minutes">
+              <input type="number" class="form-control" id="timer-seconds" placeholder="Seconds">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Item</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <table id="timer-table" class="table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Timer</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <footer>
+            <p><i>When you press "Start Timer" and press it again, it stops. Clicking it again resets the timer.</i></p>
+            <a href="index.html" class="btn btn-primary mb-3">Back</a>
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="timer-sound" src="http://www.funmag.org/wp-content/uploads/2013/11/08-alarm-ringtones.mp3" preload="auto"></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const itemForm = document.getElementById('item-form');
+    const timerTable = document.getElementById('timer-table');
+    const timers = new Map();
+
+    itemForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const itemName = document.getElementById('item-name').value;
+      const timerHours = parseInt(document.getElementById('timer-hours').value || 0, 10);
+      const timerMinutes = parseInt(document.getElementById('timer-minutes').value || 0, 10);
+      const timerSeconds = parseInt(document.getElementById('timer-seconds').value || 0, 10);
+
+      const totalSeconds = timerHours * 3600 + timerMinutes * 60 + timerSeconds;
+
+      if (itemName && totalSeconds > 0) {
+        addItem(itemName, totalSeconds);
+        itemForm.reset();
+      }
+    });
+
+    function addItem(name, duration) {
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${name}</td>
+        <td id="timer-cell-${name}">
+          <span id="timer-display-${name}">${formatTime(duration)}</span>
+        </td>
+        <td>
+          <a href="#" class="btn btn-success btn-sm start-stop-timer" role="button" aria-pressed="true" data-status="stopped" data-duration="${duration}" data-name="${name}">Start Timer</a>
+          <button type="button" class="btn btn-danger btn-sm delete-item" data-name="${name}">Delete</button>
+        </td>
+      `;
+      timerTable.querySelector('tbody').appendChild(newRow);
+    }
+
+    function formatTime(totalSeconds) {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer(duration, displayElement, name) {
+      let remainingTime = duration;
+      let timerInterval;
+
+      timerInterval = setInterval(function() {
+        remainingTime--;
+
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          playTimerSound();
+          const timerButton = timerTable.querySelector(`.start-stop-timer[data-name="${name}"]`);
+          timerButton.textContent = "Start Timer";
+          timerButton.dataset.status = "stopped";
+        }
+
+        renderTimer(remainingTime, displayElement);
+      }, 1000);
+
+      timers.set(name, timerInterval);
+    }
+
+    function renderTimer(totalSeconds, displayElement) {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const timerString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      displayElement.textContent = timerString;
+    }
+
+    function playTimerSound() {
+      const timerSound = document.getElementById('timer-sound');
+      timerSound.play();
+    }
+
+    timerTable.addEventListener('click', function(event) {
+      if (event.target.classList.contains('start-stop-timer')) {
+        const timerButton = event.target;
+        const duration = parseInt(timerButton.dataset.duration, 10);
+        const name = timerButton.dataset.name;
+        const timerDisplay = timerButton.parentElement.previousElementSibling.querySelector(`#timer-display-${name}`);
+        const status = timerButton.dataset.status;
+
+        if (status === "stopped") {
+          startTimer(duration, timerDisplay, name);
+          timerButton.textContent = "Stop Timer";
+          timerButton.dataset.status = "started";
+        } else {
+          clearInterval(timers.get(name));
+          timerButton.textContent = "Start Timer";
+          timerButton.dataset.status = "stopped";
+        }
+      } else if (event.target.classList.contains('delete-item')) {
+        const itemName = event.target.dataset.name;
+        const rowToDelete = timerTable.querySelector(`#timer-cell-${itemName}`).parentElement;
+        rowToDelete.remove();
+        clearInterval(timers.get(itemName));
+        timers.delete(itemName);
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html>
