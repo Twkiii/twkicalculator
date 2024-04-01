@@ -76,6 +76,19 @@
         <a href="nonvip.html" class="btn btn-primary">Non-VIP <br>Calculator</a>
         <a href="cropstimer.html" class="btn btn-primary">Timer<br>(TEST)</a>
     </div>
-    <footer>&copy; 2024 TWKI</footer>
+    <center><footer>&copy; 2024 TWKI <br><span id="visit-count"></span></footer></center>
 </body>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if(localStorage.getItem('visitCount')) {
+        let count = parseInt(localStorage.getItem('visitCount')) + 1;
+        localStorage.setItem('visitCount', count);
+      } else {
+        localStorage.setItem('visitCount', 1);
+      }
+
+      document.getElementById('visit-count').innerText = " Visits: " + localStorage.getItem('visitCount');
+    });
+  </script>
